@@ -41,10 +41,10 @@ YLAB = ['$\left\langle \dot{\varphi}_{i}\right\rangle /\left\langle \',...
     'varphi\right\rangle \ \left[1/\mathrm{day}\right]$']; % Y label
 if strcmp(Lmet,'Km1')==1
 Xmin = [[0 0];[0 0]]; Xmax = [[2.25 2.25];[4.5 4.5]]; % X bounds
-Ymin = [[0 0];[0 0]]; Ymax = [[0.35 0.66];[0.35 0.66]]; % Y bounds
+Ymin = [[0 0];[0 0]]; Ymax = [[0.33 0.66];[0.33 0.66]]; % Y bounds
 elseif strcmp(Lmet,'LAM')==1
 Xmin = [[0 0];[0 0]]; Xmax = [[4.5 4.5];[6.1 6.1]]; % X bounds
-Ymin = [[0 0];[0 0]]; Ymax = [[0.35 0.64];[0.35 0.64]]; % Y bounds
+Ymin = [[0 0];[0 0]]; Ymax = [[0.33 0.64];[0.33 0.64]]; % Y bounds
 end
 
 %% 2. Prepare reduced data for figure

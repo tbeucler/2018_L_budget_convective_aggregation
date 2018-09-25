@@ -80,8 +80,8 @@ for irad = 1:Nrad, rad = rad_array{irad};
         % Name and load each experiment
         if irad==3
             if iSST==1, name = 'mdradsfc'; % MD RAD+SFC experiment
-            elseif iSST==2, name = 'mdsfc'; % MD RAD experiment
-            elseif iSST==3, name = 'mdrad'; % MD SFC experiment
+            elseif iSST==2, name = 'mdrad'; % MD RAD experiment
+            elseif iSST==3, name = 'mdsfc'; % MD SFC experiment
             elseif iSST==4, name = 'sqcam'; % CAM square experiment
             elseif iSST==5, name = 'sqrrtm'; % RRTM square experiment
             elseif iSST==6, name = 'bsqrrtm'; % Big square experiment

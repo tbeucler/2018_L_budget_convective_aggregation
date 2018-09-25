@@ -26,14 +26,14 @@ SST_array = 280:5:310; NSST = numel(SST_array); % Sea surface temperatures [K]
 ANOX = 0.11; ANOY = 0.06;
 cmap = parula(7); % Parula color scale (parallel with Fig6 of Wing & Cronin)
 cmap(7,:) = [139 69 19]/255; % Make the yellow saddlebrown
-cmapMD = [[153 51 255]/255;[153 0 153]/255;[1 0 0];[0.5 0.5 0.5];...
+cmapMD = [[153 51 255]/255;[1 0 0];[153 0 153]/255;[0.5 0.5 0.5];...
     [0.5 0.5 0.5];[0 0 0];[0 0 0]]; % Color scale for mechanism den. exp.
 CMAP = cat(3,cmap,cmap,cmapMD); % Full color scale
 FOR = {'%02.1f','%02.0f'}; % Format of each legend's line
 fz = 12; % Fontsize
 lw = 1; % Linewidth
-STR_array = {'$\mathrm{MD_{SFC}^{RAD}}','$\mathrm{MD_{RAD}}',...
-    '$\mathrm{MD_{SFC}}','$\mathrm{SQ}','','$\mathrm{BSQ}',''}; % Legends for MD lines
+STR_array = {'$\mathrm{MD_{SFC}^{RAD}}','$\mathrm{MD_{SFC}}',...
+    '$\mathrm{MD_{RAD}}','$\mathrm{SQ}','','$\mathrm{BSQ}',''}; % Legends for MD lines
 Xpos = [0.405 0.805]; % x-position of legends
 YLAB = {'L [1000km]',['$\mathrm{Standard\ deviation\ FMSE\ \left',...
     '[MJ.m^{-2}\right]}$']}; % y-axis labels
@@ -42,15 +42,15 @@ YLOC = {'left','right'}; % Location of y-axis
 % Legend for each figure line
 a = zeros(2,1); b = a; YLIM = zeros(2,2); adj = zeros(2,Nrad,NSST); % Position of legends in Figure
 a(2) = 1/2.5; b(2) = -1.115+1.2; % Linear position of agg. legends (a*AGG+b)
-adj(2,:,:) = [[0 0 0 0 0 0 0];[-2 -3 -1 -3 -1 -2 -1];[1 -3 -1 1 0 2 0]]/1e2; % Adjustment for y-position of AGG leg.
+adj(2,:,:) = [[0 0 0 0 0 0 0];[-2 -3 -1 -3 -1 -2 -1];[1 -1 -3 1 0 2 0]]/1e2; % Adjustment for y-position of AGG leg.
 XLIM = [0 97.5]; YLIM(2,:) = [0 1.95]; % x and y bounds of aggregation plot
 Xmargin = 0.1; Ymargin = 0.1; % x and y margins of subplots
-if strcmp(Lmet,'Km1')==1, a(1) = 0.18075; b(1) = 0.0682; % Leg pos (a*L+b)
-    adj(1,:,:) = [[0 0 0 0 0 0 0];[-2 6 -4 -5 0 -2 0];[2 -2 0 -1 0 2 0]]/1e2; % Adjustment for y-position of L legends
-    YLIM(1,:) = [0 4.53]; % y bounds for L subplot
-elseif strcmp(Lmet,'LAM')==1, a(1) = 0.1; b(1) = 0.0682; % Leg pos (a*L+b)
-    adj(1,:,:) = [[0 0 0 0 0 0 0];[-3 8 -2 -1 1 1 -0.5];[5 -8 0 -2 0 -2 0]]/1e2; % Adjustment for y-position of L legends
-    YLIM(1,:) = [0 8.13]; % y bounds for L subplot
+if strcmp(Lmet,'Km1')==1, a(1) = 0.4; b(1) = 0.55; % Leg pos (a*L+b)
+    adj(1,:,:) = [[0 0 0 0 0 0 0];[2 7 -1.5 -1 2 0 2];[3 4 -2 0.5 0.0 6 0.0]]/1e2; % Adjustment for y-position of L legends
+    YLIM(1,:) = [-1.125 0.675]; % y bounds for L subplot
+elseif strcmp(Lmet,'LAM')==1, a(1) = 0.5; b(1) = 0.4; % Leg pos (a*L+b)
+    adj(1,:,:) = [[0 0 0 0 0 0 0];[-4.0 -0.75 -2.0 -4.75 -1.0 -0.25 -1.5];[3.0 -3.0 -6.5 0.0 0.0 2.0 0.0]]/1e2; % Adjustment for y-position of L legends
+    YLIM(1,:) = [-0.75 1]; % y bounds for L subplot
 end
 
 %% 2. Figure
@@ -82,7 +82,7 @@ for irad = 1:Nrad, rad = rad_array{irad}; % Radiation scheme
             
             % Plot line
             if iSST~=7||irad~=3
-                if ifig==1, TOPLOT = squeeze(dat.(Lmet).mse(:,:,dom)/1e6);
+                if ifig==1, TOPLOT = log10(squeeze(dat.(Lmet).mse(:,:,dom)/1e6));
                     if irad==3&&iSST>3, TOPLOT = sqrt(2)*TOPLOT; end % Scaling factor for square domain
                 elseif ifig==2, TOPLOT = log10(squeeze(sqrt(dat.AGG.mse(:,:,dom))/1e6));
                 end; P = plot(dat.t(dom),movmean(TOPLOT,WEEK),'color',...
@@ -90,16 +90,15 @@ for irad = 1:Nrad, rad = rad_array{irad}; % Radiation scheme
             end
             
             % Axis and labels
-            if strcmp(rad,'rrtm')==1, set(P,'Linestyle',':'); end
+            if strcmp(rad,'rrtm')==1||(irad==3&&iSST>4), set(P,'Linestyle',':'); end
             xlim(XLIM); ylim(YLIM(ifig,:)); grid on;
             xlabel('Time [day]','Interpreter','Latex');
             ylabel(YLAB{ifig},'Interpreter','Latex');
             set(gca,'TickLabelInterpreter','Latex','Box','on',...
                 'TickDir','out','Fontsize',fz,'YAxisLocation',YLOC{ifig});
             
-            % Legend
-            if ifig==1, MAT = TOPLOT(mat); elseif ifig==2, MAT = 10.^TOPLOT(mat); end
-            if irad==2||irad==3
+            MAT = 10.^TOPLOT(mat); % Legend
+            if irad==2||(irad==3&&iSST~=7)
                 if irad==2, STR = ['LC',num2str(SST),'(',num2str(nanmean(...
                         MAT),FOR{ifig}),')'];
                 else, STR = [STR_array{iSST},'\left(',...
@@ -121,9 +120,10 @@ set(S(1),'Position',[Xmargin Ymargin 0.5-Xmargin (1-2*Ymargin)]);
 set(S(2),'Position',[0.5 Ymargin 0.5-Xmargin (1-2*Ymargin)]);
 
 % Change aggregation y-scale to logarithmic
-YTIK = S(2).YTickLabel;
-for iy = 1:numel(YTIK), YTIK{iy}=num2str(10^str2double(YTIK{iy}),FOR{1}); end
-set(S(2),'YTickLabel',YTIK);
+for ifig=1:2, YTIK = S(ifig).YTickLabel;
+    for iy = 1:numel(YTIK), YTIK{iy}=num2str(10^str2double(YTIK{iy}),FOR{1}); end
+    set(S(ifig),'YTickLabel',YTIK);
+end
 
 % Add subplot's ID letters
 ANOT = {'a)','b)'};
