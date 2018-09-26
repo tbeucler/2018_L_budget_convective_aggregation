@@ -66,16 +66,18 @@ for ifig = 1:2, S(ifig) = subplot(2,1,ifig); % Subplot
     
     % Axes
     if ifig==2, xlabel('$\mathrm{Time\left[day\right]}$',...
-            'fontsize',fz+1,'Interpreter','Latex'); end
+            'fontsize',fz+1,'Interpreter','Latex');
+    elseif ifig==1, set(gca,'XTickLabel','');
+    end
     ylabel(YLAB{ifig},'Fontsize',fz+1,'Interpreter','Latex');
     set(gca,'XminorTick','on','YminorTick','on','TickLabelInterpreter','Latex');
-    set(gca,'Fontsize',fz,'TitleFontWeight','normal','XTickLabel','');
+    set(gca,'Fontsize',fz,'TitleFontWeight','normal');
     box on; drawnow; xlim(XLIM); ylim(YLIM(ifig,:));
     
     % Change subplot's and legend's positions
     if ifig==1, LP = S(ifig).Position; % Save initial S(1) position
     elseif ifig==2, S(2).Position(2) = S(1).Position(2)-S(2).Position(4);
-    end 
+    end
     LEG = legend(P,LEGLAB(ifig,:),'Location','eastoutside',...
         'Fontsize',fz,'Interpreter','Latex'); % Legend
     LEG.Position(2)=S(ifig).Position(2);LEG.Position(4)=S(ifig).Position(4);
