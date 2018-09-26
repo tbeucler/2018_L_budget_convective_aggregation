@@ -124,9 +124,9 @@ for irad = 1:Nrad, rad = rad_array{irad};
         % Length scale averaged over growth and mature phases
         toplot.Lgrowth = squeeze(nanmean(dat.(Lmet).mse(:,:,gro),3))/1e6; % In Mm
         toplot.Lmature = squeeze(nanmean(dat.(Lmet).mse(:,:,mat),3))/1e6; % In Mm
-        
+
         %% 3. Figure
-        
+
         S(irad,iSST)=subplot(Nrad,NSST,NSST*(irad-1)+iSST);
         
         % Background quadrant
@@ -211,7 +211,7 @@ for irad = 1:Nrad, rad = rad_array{irad};
         for iSST = 1:NSST, fprintf(fileid,'& ');
             for i = 1:Nf_fig
                 fprintf(fileid,['\\textcolor{C',num2str(i),'}{',num2str(...
-                    sq_fac*TAB.(['SST',num2str(iSST)]).(F{iphase}).(f_fig{i}),fm),'}\\ ']);
+                    10*TAB.(['SST',num2str(iSST)]).(F{iphase}).(f_fig{i}),fm),'}\\ ']);
             end; fprintf(fileid,' ');
         end; fprintf(fileid,'\\tabularnewline\n'); fprintf(fileid,'\\hline\n');
     end
