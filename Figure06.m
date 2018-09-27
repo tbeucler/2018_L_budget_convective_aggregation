@@ -31,6 +31,7 @@ ARAD = {'CAM','RRTM','MD'}; % Array legend prefixes
 AMD = {'MD RAD SFC','MD RAD',[num2str(sq_fac),' MD SFC'],...
     [num2str(sq_fac),' SQ CAM'],[num2str(sq_fac),' SQ RRTM'],...
     [num2str(sq_fac),'BSQ RRTM'],''}; % Array legend prefixes (continued)
+AMD_TAB = {'MD RAD SFC','MD RAD','MD SFC','SQ CAM','SQ RRTM','BSQ RRTM'}; % No pre-factor in table
 colors_rgb = [117 112 179; 217 150 0; 27 158 119; 231 41 138]; % Longwave/Shortwave/SEF/Advection
 cmap = colors_rgb./255; % Adapted colorbar from Wing & Cronin (2016)
 delgraph = [0 3.5e-3]; % Space between figures
@@ -177,7 +178,7 @@ for irad = 1:Nrad, rad = rad_array{irad};
     fprintf(fileid,'Var$\\downarrow\\ $Exp$\\rightarrow$ ');
     for iSST = 1:NSST, SST = SST_array(iSST);
         if irad~=3, fprintf(fileid,['& ',ARAD{irad},num2str(SST),' ']);
-        else, fprintf(fileid,['& ',AMD{iSST},' ']);
+        else, fprintf(fileid,['& ',AMD_TAB{iSST},' ']);
         end
     end; fprintf(fileid,'\\tabularnewline\n');
     fprintf(fileid,'\\hline\n'); fprintf(fileid,'\\hline\n');
