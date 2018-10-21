@@ -79,6 +79,8 @@ for ifig = 1:3, S(ifig) = subplot(3,1,ifig); % Subplot
                 f_fig{iF})),WEEK),'Linewidth',lw,'color',cmap(iF,:)); hold on;
         end
     else % Plot arrows indicating stretching/shrinking length scale factor
+        line([min(dat.t) max(dat.t)],[0 0],'color',[0.6 0.6 0.6],...
+            'Linewidth',lw); hold on; % Zero line
         for iF = 3:-1:2 
             for it = 1:Ndiv
             AR = scatter(TIME(it),LOG.(f_fig{iF})(it),'MarkerEdgeColor',cmap(iF,:),...

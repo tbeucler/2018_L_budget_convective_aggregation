@@ -52,9 +52,9 @@ XLIM = [3.75 7]; % X bounds
 XLAB = '$\lambda\left[\mathrm{m}\right]$'; % x label
 YLIM = [[-0.075 0.075];[0 5e-3];[-0.035 0.055]]; % y bounds for subplots
 YL = [0.75 1]; % y-line to plot the diabatic length scale [%]
-YLAB = {'$\lambda^{-1}\dot{\varphi}_{i}/\left\langle \varphi\right\rangle \ \left[\mathrm{day.m^{-1}}\right]$',...
+YLAB = {'$\lambda^{-1}\dot{\varphi}_{i}/\left\langle \varphi\right\rangle \ \left[\mathrm{day^{-1}\ m^{-1}}\right]$',...
     '$\lambda^{-1}L_{v}\mathrm{Re}\left(\widehat{H}^{*}\widehat{q_{n}}\right)/\left\langle \varphi\right\rangle$',...
-    '$\lambda^{-1}\dot{\varphi}_{i}/\left\langle \varphi\right\rangle \ \left[\mathrm{day.m^{-1}}\right]$'};
+    '$\lambda^{-1}\dot{\varphi}_{i}/\left\langle \varphi\right\rangle \ \left[\mathrm{day^{-1}\ m^{-1}}\right]$'};
 
 load(['MAT_DATA',filesep,rad,num2str(SST)]); Nlam = numel(dat.lambda); % Load data
 

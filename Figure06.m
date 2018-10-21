@@ -40,6 +40,7 @@ Delbot = 0.1; % Size for axis on the bottom of the graph
 DelSST = (1-Dellef)/NSST; Delrad = (1-Delbot)/Nrad; % Size of each subplot
 DelX = DelSST/2; DelY = Delrad/7.5; % Annotation's box size
 dlineSST = Dellef; dlinerad = Delbot; % Line extending from box plots
+dyleg = 4e-3; % Adjust legend's top to avoid double top black line
 F = {'Xgro','Xmat','Ygro','Ymat'}; NF = numel(F); % Plotted fields
 f_fig = {'lw','sw','sef','adv'}; Nf_fig = numel(f_fig); % Fields plotted in figure
 fm = '%01.1f'; % Table format for aggregation and length scale rates
@@ -159,13 +160,16 @@ for irad = 1:Nrad, rad = rad_array{irad};
                 'MarkerEdgeColor',cmap(i,:),'SizeData',sz); hold on;
         end
         % Figure properties
-        grid on; xlim([-XLIM(iSST) XLIM(iSST)]); ylim([-YLIM(irad) YLIM(irad)]);
+        %grid on; 
+        xlim([-XLIM(iSST) XLIM(iSST)]); ylim([-YLIM(irad) YLIM(irad)]);
         set(findobj(gcf,'type','axes'),'TickLabelInterpreter','Latex',...
             'Fontsize',fz,'Linewidth',lw);
-        if iSST>1, set(gca,'YTickLabel',''); end
-        if irad<3, set(gca,'XTickLabel',''); end
-        if iSST==1, ylabel(YLAB,'Fontsize',fz,'Interpreter','Latex'); end
-        if irad==3, xlabel(XLAB,'Fontsize',fz,'Interpreter','Latex'); end
+        if iSST==1&&irad==2, ylabel(YLAB,'Fontsize',fz,'Interpreter','Latex'); 
+        else, set(gca,'YTickLabel','');
+        end
+        if irad==3&&iSST==4, xlabel(XLAB,'Fontsize',fz,'Interpreter','Latex'); 
+        else, set(gca,'XTickLabel','');
+        end
         TAB.(['SST',num2str(iSST)]) = toplot; % Save structure (SST) for Table
         
     end
@@ -184,7 +188,7 @@ for irad = 1:Nrad, rad = rad_array{irad};
     fprintf(fileid,'\\hline\n'); fprintf(fileid,'\\hline\n');
     
     % 4.2 Growth and mature phase's length scale
-    fprintf(fileid,'$L_{\\mathrm{G/M}}\\ \\left[1000\\mathrm{km}\\right]$ ');
+    fprintf(fileid,'$\\left(L\\right)_{\\mathrm{G/M}}\\ \\left[1000\\mathrm{km}\\right]$ ');
     for iSST = 1:NSST
         fprintf(fileid,['& ',num2str(TAB.(['SST',num2str(iSST)]).Lgrowth,fm),...
             '/',num2str(TAB.(['SST',num2str(iSST)]).Lmature,fm),'\\ ']);
@@ -193,8 +197,8 @@ for irad = 1:Nrad, rad = rad_array{irad};
     % 4.3 Growth and mature phase's aggregation rate
     for iphase = 1:2
         if iphase==1, PHA='G'; else, PHA='M'; end
-        fprintf(fileid,['$\\left\\langle \\dot{\\varphi}_{i}\\right\\rangle /',...
-            '\\left\\langle \\varphi\\right\\rangle _{\\mathrm{',PHA,...
+        fprintf(fileid,['$\\left(\\left\\langle \\dot{\\varphi}_{i}\\right\\rangle /',...
+            '\\left\\langle \\varphi\\right\\rangle\\right) _{\\mathrm{',PHA,...
             '}}\\ \\left[\\mathrm{d^{-1}}\\right]$ ']);
         for iSST = 1:NSST, fprintf(fileid,'& ');
             for i = 1:Nf_fig
@@ -207,7 +211,7 @@ for irad = 1:Nrad, rad = rad_array{irad};
     % 4.4 Growth and mature phase's length scale rate
     for iphase = 1:2
         if iphase==1, PHA='G'; else, PHA='M'; end
-        fprintf(fileid,['$10\\ \\dot{L}_{i}/L_{\\mathrm{',PHA,'}}\\ \\left[',...
+        fprintf(fileid,['$\\left(10\\ \\dot{L}_{i}/L\\right)_{\\mathrm{',PHA,'}}\\ \\left[',...
             '\\mathrm{d^{-1}}\\right]$ ']);
         for iSST = 1:NSST, fprintf(fileid,'& ');
             for i = 1:Nf_fig
@@ -222,12 +226,13 @@ for irad = 1:Nrad, rad = rad_array{irad};
         if iphase==1, PHA='G'; STR = 'LDIABgrowth';
         else, PHA='M'; STR = 'LDIABmature';
         end
-        fprintf(fileid,['${\\cal L}_{i,\\mathrm{',PHA,'}}\\ \\',...
+        fprintf(fileid,['$\\left({\\cal L}_{i}\\right)_{\\mathrm{',PHA,'}}\\ \\',...
             'left[1000\\mathrm{km}\\right]$ ']);
         for iSST = 1:NSST, fprintf(fileid,'& ');
             for i = 1:Nf_fig
-                fprintf(fileid,['\\textcolor{C',num2str(i),'}{',num2str(...
-                    TAB.(['SST',num2str(iSST)]).(STR).(f_fig{i}),fm),'}\\ ']);
+                LSTR = num2str(TAB.(['SST',num2str(iSST)]).(STR).(f_fig{i}),fm);
+                if strcmp(LSTR,'NaN')==1, LSTR = 'N/A'; end % Replace NaN with N/A
+                fprintf(fileid,['\\textcolor{C',num2str(i),'}{',LSTR,'}\\ ']);
             end; fprintf(fileid,' ');
         end; fprintf(fileid,'\\tabularnewline\n'); fprintf(fileid,'\\hline\n');
     end
@@ -265,18 +270,20 @@ for irad = 1:Nrad
         end
     end
 end
-set(LEG,'Position',S(Nrad,NSST).Position,'Fontsize',fz/1.6,'Interpreter','Latex');
+set(LEG,'Position',[S(Nrad,NSST).Position(1) S(Nrad,NSST).Position(2)...
+    S(Nrad,NSST).Position(3) S(Nrad,NSST).Position(4)+dyleg],...
+    'Fontsize',fz/1.6,'Interpreter','Latex','LineWidth',lw,'EdgeColor','k');
 
 for irad = 1:Nrad
     L(irad) = annotation('line',...
-        'X',[S(irad,1).Position(1)-dlineSST S(irad,1).Position(1)],...
+        'X',[S(irad,1).Position(1) S(irad,1).Position(1)],...
         'Y',[S(irad,1).Position(2) S(irad,1).Position(2)],'Linewidth',lw,...
         'color','k');
 end
 for iSST = 1:NSST
     L(iSST) = annotation('line',...
         'X',[S(3,iSST).Position(1) S(3,iSST).Position(1)],...
-        'Y',[S(3,iSST).Position(2)-dlinerad S(3,iSST).Position(2)],...
+        'Y',[S(3,iSST).Position(2) S(3,iSST).Position(2)],...
         'Linewidth',lw,'color','k');
 end
 

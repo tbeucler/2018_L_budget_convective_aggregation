@@ -37,7 +37,7 @@ LOC='Northoutside'; OR='horizontal'; % Location and orientation of colorbar
 XLAB = 'Sea Surface Temperature [K]'; % x label
 YLAB = '$\dot{L_{i}}/L\ \left[1/\mathrm{day}\right]$'; % y label
 if strcmp(Lmet,'Km1')==1, YLIM = [-0.6 0.75]; % y bounds of figure
-elseif strcmp(Lmet,'LAM')==1, YLIM = [-0.3 0.35]; % y bounds of figure
+elseif strcmp(Lmet,'LAM')==1, YLIM = [-0.35 0.35]; % y bounds of figure
 end
 
 for irad = 1:Nrad, rad = rad_array{irad};
@@ -64,10 +64,11 @@ for irad = 1:Nrad, rad = rad_array{irad};
                 dat.(Lmet).(f_fig{i})(:,:,gro)./dat.(Lmet).mse(:,:,gro),3));
             toplot.Mat.(f_fig{i})(iSST,irad) = spd*squeeze(mean(...
                 dat.(Lmet).(f_fig{i})(:,:,mat)./dat.(Lmet).mse(:,:,mat),3));
-            % Standard mean error of length scale tendency
-            toplot.MEg.(f_fig{i})(iSST,irad) = spd*squeeze(std(dat.(Lmet).(...
+            % 3 x Standard mean error of length scale tendency
+            % (STD/sqrt(Sample size))
+            toplot.MEg.(f_fig{i})(iSST,irad) = 3*spd*squeeze(std(dat.(Lmet).(...
                 f_fig{i})(:,:,gro)./dat.(Lmet).mse(:,:,gro),0,3))/sqrt(numel(gro));
-            toplot.MEm.(f_fig{i})(iSST,irad) = spd*squeeze(std(...
+            toplot.MEm.(f_fig{i})(iSST,irad) = 3*spd*squeeze(std(...
                 dat.(Lmet).(f_fig{i})(:,:,mat)./dat.(Lmet).mse(:,:,mat),0,3))/...
                 sqrt(size(dat.(Lmet).(f_fig{i})(:,:,mat),3));
         end
